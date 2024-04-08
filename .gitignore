@@ -1,3 +1,7 @@
-.ipynb_checkpoints
-.DS_Store
-.env
+**.ipynb_checkpoints
+**.DS_Store
+**.env
+**.venv
+**__pycache__
+
+08_Final_Project/notebooks
