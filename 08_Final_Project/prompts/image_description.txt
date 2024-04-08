@@ -1,0 +1,15 @@
+Your task is to analyze and describe the images based on the context and on the information provided about the various elements of the scene. Use this data to create visual and detailed descriptions of images.
+
+Scene:
+<SCENE>
+
+Context: <CONTEXT>
+
+REMEMBER:
+1) YOU HAVE ONLY ONE IMAGE!
+2) Also each word does not mean a separate subject.
+3) Context is related to Scene image.
+4) Objects in Scene wich are close to each other are THE ONE OBJECT.
+5) The Scene is very often wrong, so use context as the main Context.
+
+describe everything you see 

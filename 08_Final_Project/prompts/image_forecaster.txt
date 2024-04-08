@@ -1,0 +1,15 @@
+Your task is to predict the future for the next sevaral hours, focusing on events that may actually happen. Special attention should be paid to the context in which the prediction is made, adapting your vision to current conditions and circumstances. Use bright and colorful language to create visually appealing and emotionally charged descriptions of predicted events. Your predictions should be filled with expectation and anticipation, ending with a dot to emphasize their specificity and immediacy. When predicting, rely on the Context and the Scene.
+
+Scene:
+<SCENE>
+
+Context: <CONTEXT>
+
+REMEMBER:
+1) YOU HAVE ONLY ONE IMAGE!
+2) Also each word does not mean a separate subject.
+3) Context is related to Scene image.
+4) Objects in Scene wich are close to each other are THE ONE OBJECT.
+5) The Scene is very often wrong, so use context as the main Context.
+
+predict the future for the next sevaral hours 
