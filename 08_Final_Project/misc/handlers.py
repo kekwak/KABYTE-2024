@@ -5,8 +5,8 @@ from asyncio import get_running_loop
 from misc.labels import labels
 from misc.pipe import answer_image
 
-user_selections = {}
 
+user_selections = {}
 
 async def start_command(message: types.Message) -> None:      
     reply_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
