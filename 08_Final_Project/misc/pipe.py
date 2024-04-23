@@ -11,6 +11,11 @@ import translators as ts
 
 from misc.labels import labels
 
+from huggingface_hub import InferenceClient
+
+import dotenv, os
+dotenv.load_dotenv()
+
 
 class AnsweringPipe():
     models = {i: j for i, j in enumerate(labels['models'])}
@@ -21,11 +26,12 @@ class AnsweringPipe():
         self.image_max_size = image_max_size
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        self.pipe_text_generation = pipeline('text-generation', model='GeneZC/MiniChat-1.5-3B', device=self.device)
+
+        self.client = InferenceClient(token=os.getenv('HF_KEY'), model='mistralai/Mistral-7B-Instruct-v0.2')
+        # self.pipe_text_generation = pipeline('text-generation', model='GeneZC/MiniChat-1.5-3B', device=self.device)
         self.pipe_image_to_text = pipeline('image-to-text', model='microsoft/git-large-coco', device=self.device)
         self.pipe_image_segmentation = pipeline('image-segmentation', model='microsoft/beit-large-finetuned-ade-640-640', device=self.device)
-        # use 'facebook/maskformer-swin-large-ade' or 'microsoft/beit-large-finetuned-ade-640-640'
-        
+
     def preprocess(self, image_link: str) -> Image:
         image = Image.open(get(image_link, stream=True).raw)
         scale = self.image_max_size / max(image.size)
@@ -57,7 +63,7 @@ class AnsweringPipe():
         if model_name == self.models[0]:
             output_text = self.generate_text_gpt(prompt)
         elif model_name == self.models[1]:
-            output_text = self.generate_text_minichat(prompt)
+            output_text = self.generate_text_mistral(prompt)
         
         return output_text
     
@@ -66,12 +72,20 @@ class AnsweringPipe():
 
         return self.translate(output_text)
     
-    def generate_text_minichat(self, prompt: str) -> str:
-        prompt = '<s> [|User|]' + prompt + '</s>[|Assistant|] '
-        output = self.pipe_text_generation(prompt, do_sample=True, temperature=0.7, max_new_tokens=1024)
+    def generate_text_mistral(self, prompt: str) -> str:
+        # prompt = '<s> [|User|]' + prompt + '</s>[|Assistant|] '
+        # output = self.pipe_text_generation(prompt, do_sample=True, temperature=0.7, max_new_tokens=1024)
 
-        output_text = output[0]['generated_text'].split('[|Assistant|]')[1]
-        return self.translate(output_text)
+        # output_text = output[0]['generated_text'].split('[|Assistant|]')[1]
+
+        r = self.client.text_generation(
+            prompt,
+            max_new_tokens=2048,
+            return_full_text=False,
+        )
+        
+        # return self.translate(output_text)
+        return self.translate(r.strip())
     
     def load_prompt(self, file: str, scene: str, context: str) -> str:
         with open('./prompts/' + file) as f:

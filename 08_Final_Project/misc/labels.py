@@ -15,7 +15,7 @@ labels = {
     'selected': 'Выбрано',
     'back': 'Назад',
 
-    'models': ['GPT-3.5', 'MiniChat-1.5'],
+    'models': ['GPT-3.5', 'Mistral-7B'],
     'tasks': ['Гадание', 'Описание'],
     'tasks_prompts': ['image_forecaster.txt', 'image_description.txt'],
 }
