@@ -1,7 +1,7 @@
 import numpy as np
-
-import torch
+from torch import cuda, device
 from transformers import pipeline
+from huggingface_hub import InferenceClient
 
 from requests import get
 from PIL import Image
@@ -10,8 +10,6 @@ from freeGPT import Client
 import translators as ts
 
 from misc.labels import labels
-
-from huggingface_hub import InferenceClient
 
 import dotenv, os
 dotenv.load_dotenv()
@@ -24,11 +22,9 @@ class AnsweringPipe():
     def __init__(self, scene_step: int=100, image_max_size: int=1280) -> None:
         self.scene_step = scene_step
         self.image_max_size = image_max_size
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+        self.device = device('cuda' if cuda.is_available() else 'cpu')
 
         self.client = InferenceClient(token=os.getenv('HF_KEY'), model='mistralai/Mistral-7B-Instruct-v0.2')
-        # self.pipe_text_generation = pipeline('text-generation', model='GeneZC/MiniChat-1.5-3B', device=self.device)
         self.pipe_image_to_text = pipeline('image-to-text', model='microsoft/git-large-coco', device=self.device)
         self.pipe_image_segmentation = pipeline('image-segmentation', model='microsoft/beit-large-finetuned-ade-640-640', device=self.device)
 
@@ -73,19 +69,13 @@ class AnsweringPipe():
         return self.translate(output_text)
     
     def generate_text_mistral(self, prompt: str) -> str:
-        # prompt = '<s> [|User|]' + prompt + '</s>[|Assistant|] '
-        # output = self.pipe_text_generation(prompt, do_sample=True, temperature=0.7, max_new_tokens=1024)
-
-        # output_text = output[0]['generated_text'].split('[|Assistant|]')[1]
-
-        r = self.client.text_generation(
+        output = self.client.text_generation(
             prompt,
             max_new_tokens=2048,
             return_full_text=False,
         )
-        
-        # return self.translate(output_text)
-        return self.translate(r.strip())
+
+        return self.translate(output.strip())
     
     def load_prompt(self, file: str, scene: str, context: str) -> str:
         with open('./prompts/' + file) as f:

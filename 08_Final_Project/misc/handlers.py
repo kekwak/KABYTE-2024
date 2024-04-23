@@ -1,12 +1,12 @@
 from aiogram import types
-from aiogram.dispatcher import Dispatcher
+from aiogram.utils.exceptions import MessageNotModified
+from asyncio import get_running_loop
 
 from misc.labels import labels
 from misc.pipe import answer_image
 
-import asyncio
-
 user_selections = {}
+
 
 async def start_command(message: types.Message) -> None:      
     reply_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -73,7 +73,10 @@ async def change_settings(callback: types.CallbackQuery) -> None:
 
     inline_markup = await get_settings_inline(models, tasks, model_default, tasks_default)
 
-    await callback.message.edit_reply_markup(inline_markup)
+    try:
+        await callback.message.edit_reply_markup(inline_markup)
+    except MessageNotModified:
+        pass
 
 async def send_large_message(message: types.Message, text: str, max_length: int = 4096) -> None:
     for start in range(0, len(text), max_length):
@@ -98,7 +101,7 @@ async def generate_output(callback: types.CallbackQuery) -> None:
 
     model, task = user_selections[user_id]['model'], labels['tasks'].index(user_selections[user_id]['task'])
 
-    loop = asyncio.get_running_loop()
+    loop = get_running_loop()
     output = await loop.run_in_executor(None, answer_image, url, model, task)
 
     await send_large_message(callback.message, f"{labels['generation_result']}\n\n" + output)
