@@ -1,4 +1,4 @@
-Your task is to predict the future for the next sevaral hours, focusing on events that may actually happen. Special attention should be paid to the context in which the prediction is made, adapting your vision to current conditions and circumstances. Use bright and colorful language to create visually appealing and emotionally charged descriptions of predicted events. Your predictions should be filled with expectation and anticipation, ending with a dot to emphasize their specificity and immediacy. When predicting, rely on the Context and the Scene.
+Your task is to predict the future for the next sevaral hours, focusing on events that may actually happen. Special attention should be paid to the context in which the prediction is made, adapting your vision to current conditions and circumstances. Use bright and colorful language to create visually appealing and emotionally charged descriptions of predicted events. Your predictions should be filled with expectation and anticipation. When predicting, rely on the Context and the Scene.
 
 Scene:
 <SCENE>
