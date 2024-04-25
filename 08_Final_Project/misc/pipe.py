@@ -1,12 +1,16 @@
 import numpy as np
+import random
+
 from torch import cuda, device
-from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from huggingface_hub import InferenceClient
 
 from requests import get
 from PIL import Image
+from tqdm import tqdm
 
-from freeGPT import Client
+# from freeGPT import Client
+from g4f.client import Client
 import translators as ts
 
 from misc.labels import labels
@@ -25,8 +29,10 @@ class AnsweringPipe():
         self.device = device('cuda' if cuda.is_available() else 'cpu')
 
         self.client = InferenceClient(token=os.getenv('HF_KEY'), model='mistralai/Mistral-7B-Instruct-v0.2')
-        self.pipe_image_to_text = pipeline('image-to-text', model='microsoft/git-large-coco', device=self.device)
-        self.pipe_image_segmentation = pipeline('image-segmentation', model='microsoft/beit-large-finetuned-ade-640-640', device=self.device)
+        self.img_tokenizer = AutoTokenizer.from_pretrained('internlm/internlm-xcomposer2-vl-1_8b', trust_remote_code=True)
+        self.visual_model = AutoModelForCausalLM.from_pretrained('internlm/internlm-xcomposer2-vl-1_8b', trust_remote_code=True).cuda().eval()
+        self.pipe_image_to_text = pipeline('image-to-text', model='microsoft/git-large-coco', device='cpu')  # self.device
+        self.pipe_image_segmentation = pipeline('image-segmentation', model='microsoft/beit-large-finetuned-ade-640-640', device='cpu')  # self.device
 
     def preprocess(self, image_link: str) -> Image:
         image = Image.open(get(image_link, stream=True).raw)
@@ -39,6 +45,26 @@ class AnsweringPipe():
         image_segmentation = self.pipe_image_segmentation.predict(image)
         image_description = self.pipe_image_to_text(image)
         return image_segmentation, image_description
+    
+    def generate_descr_advanced(self, image: Image) -> str:
+        questions = labels['vqa_questions']
+
+        file_id = str(random.randint(1e+20, 1e+21))
+        file_path = f'images_tmp/{file_id}.png'
+        image.save(file_path)
+
+        model_answers = []
+        for question in tqdm(questions):
+            model_question = '<ImageHere>' + question
+            with cuda.amp.autocast():
+                out_final, _ = self.visual_model.chat(self.img_tokenizer, query=model_question, image=file_path, do_sample=False, history=[])
+            
+            model_answers.append(out_final)
+
+        os.remove(file_path)
+        output = '\n\n'.join(model_answers)
+
+        return output
     
     def generate_scene(self, image: Image, image_segmentation: list) -> str:
         image_array = np.array(image)
@@ -61,39 +87,61 @@ class AnsweringPipe():
         elif model_name == self.models[1]:
             output_text = self.generate_text_mistral(prompt)
         
-        return output_text
+        return self.translate(output_text)
     
     def generate_text_gpt(self, prompt: str) -> str:
-        output_text = Client.create_completion('gpt3', prompt)
+        # output_text = Client.create_completion('gpt3', prompt)
 
-        return self.translate(output_text)
+        # return self.translate(output_text)
+
+        client = Client()
+        response = client.chat.completions.create(
+            model='gpt-3.5-turbo',
+            messages=[{'role': 'user', 'content': prompt}],
+        )
+
+        return response.choices[0].message.content
     
     def generate_text_mistral(self, prompt: str) -> str:
         output = self.client.text_generation(
             prompt,
-            max_new_tokens=2048,
+            max_new_tokens=4096,
             return_full_text=False,
         )
 
-        return self.translate(output.strip())
+        return output.strip()
     
     def load_prompt(self, file: str, scene: str, context: str) -> str:
         with open('./prompts/' + file) as f:
             prompt_raw = ''.join(f.readlines())
         return prompt_raw.replace('<SCENE>', scene).replace('<CONTEXT>', context)
     
-    def translate(self, text: str, src_lang: str='en', dest_lang: str='ru', translator: str='caiyun') -> str:
-        # alternative option for translator is 'modernMt', it's also good
-        return ts.translate_text(text, translator=translator, from_language=src_lang, to_language=dest_lang)
-    
-    def predict(self, image_link: str, model_name: str=models[0], task: int=0) -> str:
-        image = self.preprocess(image_link)
-        image_segmentation, image_description = self.generate_seg_descr(image)
-
-        scene = self.generate_scene(image, image_segmentation)
-        context = image_description[0].get('generated_text')
+    def translate(self, text: str, src_lang: str='en', dest_lang: str='ru', translator: str='caiyun', max_length: int = 4096) -> str:
+        text_parts = []
+        for start in range(0, len(text), max_length):
+            end = start + max_length
+            out = ts.translate_text(text[start:end], translator=translator, from_language=src_lang, to_language=dest_lang)
+            # alternative option for translator is 'modernMt', it's also good ('caiyun' now)
+            text_parts.append(out)
         
-        prompt = self.load_prompt(self.tasks[task], scene, context)
+        return ' '.join(text_parts)
+    
+    def predict(self, image_link: str, model_name: str=models[0], task: int=0, advanced: bool=True) -> str:
+        prompt_file = self.tasks[task]
+        image = self.preprocess(image_link)
+        if not advanced:
+            image_segmentation, image_description = self.generate_seg_descr(image)
+
+            context = image_description[0].get('generated_text')
+            scene = self.generate_scene(image, image_segmentation)
+        else:
+            prompt_file_sp = prompt_file.split('.')
+            prompt_file = f'{prompt_file_sp[0]}_advanced.{prompt_file_sp[1]}'
+
+            context = self.generate_descr_advanced(image)
+            scene=''
+        
+        prompt = self.load_prompt(prompt_file, scene, context)
         output = self.generate_selector(prompt, model_name=model_name)
 
         return output
@@ -103,6 +151,6 @@ class AnsweringPipe():
 
 
 ap = AnsweringPipe()
-def answer_image(image_link, model_name, task):
-    output = ap(image_link, model_name, task)
+def answer_image(*args, **kwargs):
+    output = ap(*args, **kwargs)
     return output

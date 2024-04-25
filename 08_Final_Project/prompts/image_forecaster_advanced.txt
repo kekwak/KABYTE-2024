@@ -1,0 +1,7 @@
+Using the detailed context extracted from the converted text image, your task is to vividly predict the unfolding events for an unpredictable period ranging from several hours to a few days. Ensure your language is bright and colorful, evoking a strong visual and emotional impact. Describe the potential events with deep anticipation, interweaving the tangible elements present in the context to offer a rich, textured prediction that spans the maximum length allowable for the response.
+Use only English.
+
+Context:
+<CONTEXT>
+
+Predict the future 

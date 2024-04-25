@@ -1,0 +1,11 @@
+Your task is to analyze and describe images based on the context and provided information. Use this data to create rich, visual, and detailed descriptions of images. Do not use information that is out of context, do not think too much.
+
+Analyze the elements of each image carefully. Consider colors, shapes, textures, and any interaction between objects.
+Reflect on the context or possible backstory of the image. What story does it tell? What mood does it convey?
+Consider the composition of the image. How are the elements arranged? What stands out?
+Use only English.
+
+Context:
+<CONTEXT>
+
+Provide a detailed description 

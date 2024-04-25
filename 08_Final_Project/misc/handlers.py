@@ -17,33 +17,51 @@ async def start_command(message: types.Message) -> None:
 async def print_guide(message: types.Message) -> None:
     await message.answer(labels['guide_text'])
 
-async def get_settings_inline(models, tasks, model_default, tasks_default) -> types.InlineKeyboardMarkup:
+async def set_up_user_settings(callback) -> None:
+    user_id = callback.from_user.id
+    models, tasks = labels['models'], labels['tasks']
+    if user_id not in user_selections:
+        user_selections[user_id] = {'model': models[0], 'task': tasks[0], 'advanced': True}
+
+async def get_settings_inline(models, tasks, model_default, tasks_default, advanced_default) -> types.InlineKeyboardMarkup:
     inline_markup = types.InlineKeyboardMarkup()
 
-    inline_markup.add(*(
+    buttons = [
         types.InlineKeyboardButton(model_name + (' ✅' if model_default == model_name else ''), callback_data=f'settings_model_text_id_select: {model_name}')
         for model_name in models
-    ))
-    inline_markup.add(*(
+    ]
+    for i in range(0, len(buttons), 2):
+        if i + 1 < len(buttons):
+            inline_markup.add(buttons[i], buttons[i+1])
+        else:
+            inline_markup.add(buttons[i])
+
+    buttons = [
         types.InlineKeyboardButton(task_name + (' ✅' if tasks_default == task_name else ''), callback_data=f'settings_task_select: {task_name}')
         for task_name in tasks
-    ))
+    ]
+    for i in range(0, len(buttons), 2):
+        if i + 1 < len(buttons):
+            inline_markup.add(buttons[i], buttons[i+1])
+        else:
+            inline_markup.add(buttons[i])
+    
+    inline_markup.add(types.InlineKeyboardButton(labels['checkboxes'][0] + (' ✅' if advanced_default else ''), callback_data=f'settings_advanced_switch: None'))
+    
     inline_markup.add(types.InlineKeyboardButton(labels['generate'], callback_data=f'start_generating'))
 
     return inline_markup
 
 async def print_settings(message: types.Message) -> None:
-    models = labels['models']
-    tasks = labels['tasks']
-
+    models, tasks = labels['models'], labels['tasks']
     user_id = message.from_user.id
-    if user_id not in user_selections:
-        user_selections[user_id] = {'model': models[0], 'task': tasks[0]}
+    await set_up_user_settings(message)
     
     model_default = user_selections[user_id]['model']
     tasks_default = user_selections[user_id]['task']
+    advanced_default = user_selections[user_id]['advanced']
 
-    inline_markup = await get_settings_inline(models, tasks, model_default, tasks_default)
+    inline_markup = await get_settings_inline(models, tasks, model_default, tasks_default, advanced_default)
 
     last_photo_file_id = message.photo[-1].file_id
     await message.answer_photo(photo=last_photo_file_id, caption=labels['settings_text'], reply_markup=inline_markup)
@@ -54,24 +72,24 @@ async def change_settings(callback: types.CallbackQuery) -> None:
     models, tasks = labels['models'], labels['tasks']
     
     user_id = callback.from_user.id
-    if user_id not in user_selections:
-        user_selections[user_id] = {'model': models[0], 'task': tasks[0]}
+    await set_up_user_settings(callback)
     
     model_default = user_selections[user_id]['model']
     tasks_default = user_selections[user_id]['task']
+    advanced_default = user_selections[user_id]['advanced']
 
     await callback.answer()
-    if target == model_default or target == tasks_default:
-        return
 
     if obj == 'settings_model_text_id_select:':
         model_default = target
     elif obj == 'settings_task_select:':
         tasks_default = target
+    elif obj == 'settings_advanced_switch:':
+        advanced_default = not advanced_default
     
-    user_selections[user_id] = {'model': model_default, 'task': tasks_default}
+    user_selections[user_id] = {'model': model_default, 'task': tasks_default, 'advanced': advanced_default}
 
-    inline_markup = await get_settings_inline(models, tasks, model_default, tasks_default)
+    inline_markup = await get_settings_inline(models, tasks, model_default, tasks_default, advanced_default)
 
     try:
         await callback.message.edit_reply_markup(inline_markup)
@@ -85,9 +103,7 @@ async def send_large_message(message: types.Message, text: str, max_length: int 
 
 async def generate_output(callback: types.CallbackQuery) -> None:
     user_id = callback.from_user.id
-    models, tasks = labels['models'], labels['tasks']
-    if user_id not in user_selections:
-        user_selections[user_id] = {'model': models[0], 'task': tasks[0]}
+    await set_up_user_settings(callback)
 
     file_id = callback.message.photo[-1].file_id
     
@@ -99,12 +115,12 @@ async def generate_output(callback: types.CallbackQuery) -> None:
 
     await callback.answer(labels['start_generating'])
 
-    model, task = user_selections[user_id]['model'], labels['tasks'].index(user_selections[user_id]['task'])
+    model, task, advanced = user_selections[user_id]['model'], labels['tasks'].index(user_selections[user_id]['task']), user_selections[user_id]['advanced']
 
     loop = get_running_loop()
-    output = await loop.run_in_executor(None, answer_image, url, model, task)
+    output = await loop.run_in_executor(None, answer_image, url, model, task, advanced)
 
-    await send_large_message(callback.message, f"{labels['generation_result']}\n\n" + output)
+    await send_large_message(callback.message, f"{labels['generation_result']}\n{model} {labels['tasks'][task]} adv={advanced}\n\n" + output)
 
 async def message_close(callback: types.CallbackQuery) -> None:
     await callback.message.edit_text(labels['cancel'])
@@ -119,5 +135,5 @@ def register_handlers(dp) -> None:
     # dp.register_message_handler(other_message_handler)
 
     dp.register_callback_query_handler(message_close, lambda m: m.data == 'message_close')
-    dp.register_callback_query_handler(change_settings, lambda m: m.data.startswith('settings_model_text_id_select:') or m.data.startswith('settings_task_select:'))
+    dp.register_callback_query_handler(change_settings, lambda m: m.data.startswith('settings_model_text_id_select:') or m.data.startswith('settings_task_select:') or m.data.startswith('settings_advanced_switch:'))
     dp.register_callback_query_handler(generate_output, lambda m: m.data == 'start_generating')
