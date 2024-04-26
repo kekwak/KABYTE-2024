@@ -7,7 +7,7 @@ labels = {
     'settings_text': 'Выберите действия:',
 
     'generate': 'Генерировать!',
-    'start_generating': 'Ожидайте ~2 мин.',
+    'start_generating': 'Ожидайте ~2-6 мин.',
     'generation_result': '✅ Ваша Генерация:',
     
     'unknown_command': 'Неизвестная команда, напишите /reload',
@@ -19,6 +19,8 @@ labels = {
     'tasks': ['Гадание', 'Описание'],
     'checkboxes': ['Advanced'],
     'tasks_prompts': ['image_forecaster.txt', 'image_description.txt'],
+
+    'error': 'Произошла ошибка :(',
 
     'vqa_questions': [
         'Describe the main elements and settings depicted in the image.',

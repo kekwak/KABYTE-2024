@@ -1,6 +1,8 @@
 from aiogram import Bot, Dispatcher
 from aiogram.utils import executor
 from misc.handlers import register_handlers
+from misc.utils import set_up_images_tmp
+set_up_images_tmp()
 
 import logging
 import os, dotenv

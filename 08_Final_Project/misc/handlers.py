@@ -115,25 +115,33 @@ async def generate_output(callback: types.CallbackQuery) -> None:
 
     await callback.answer(labels['start_generating'])
 
-    model, task, advanced = user_selections[user_id]['model'], labels['tasks'].index(user_selections[user_id]['task']), user_selections[user_id]['advanced']
-
+    model = user_selections[user_id]['model']
+    task = labels['tasks'].index(user_selections[user_id]['task'])
+    advanced = user_selections[user_id]['advanced']
+    
+    # try:
     loop = get_running_loop()
     output = await loop.run_in_executor(None, answer_image, url, model, task, advanced)
+    # except Exception as e:
+    #     output = labels['error'] + f' {e}'
 
-    await send_large_message(callback.message, f"{labels['generation_result']}\n{model} {labels['tasks'][task]} adv={advanced}\n\n" + output)
+    final_output =f"{labels['generation_result']}\n{model} {labels['tasks'][task]} adv={advanced}\n\n" + output
+
+    await send_large_message(callback.message, final_output)
 
 async def message_close(callback: types.CallbackQuery) -> None:
     await callback.message.edit_text(labels['cancel'])
-
-# async def other_message_handler(message: types.Message) -> None:  
-#     await message.answer(labels['unknown_command'])
 
 def register_handlers(dp) -> None:
     dp.register_message_handler(start_command, commands=['start', 'reload'])
     dp.register_message_handler(print_guide, lambda m: m.text == labels['guide'])
     dp.register_message_handler(print_settings, content_types=['photo'])
-    # dp.register_message_handler(other_message_handler)
 
     dp.register_callback_query_handler(message_close, lambda m: m.data == 'message_close')
-    dp.register_callback_query_handler(change_settings, lambda m: m.data.startswith('settings_model_text_id_select:') or m.data.startswith('settings_task_select:') or m.data.startswith('settings_advanced_switch:'))
+    dp.register_callback_query_handler(
+        change_settings, lambda m:
+        m.data.startswith('settings_model_text_id_select:') or
+        m.data.startswith('settings_task_select:') or
+        m.data.startswith('settings_advanced_switch:')
+    )
     dp.register_callback_query_handler(generate_output, lambda m: m.data == 'start_generating')

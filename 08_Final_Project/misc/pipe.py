@@ -5,11 +5,11 @@ from torch import cuda, device
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from huggingface_hub import InferenceClient
 
+from importlib import reload
 from requests import get
 from PIL import Image
 from tqdm import tqdm
 
-# from freeGPT import Client
 from g4f.client import Client
 import translators as ts
 
@@ -31,8 +31,8 @@ class AnsweringPipe():
         self.client = InferenceClient(token=os.getenv('HF_KEY'), model='mistralai/Mistral-7B-Instruct-v0.2')
         self.img_tokenizer = AutoTokenizer.from_pretrained('internlm/internlm-xcomposer2-vl-1_8b', trust_remote_code=True)
         self.visual_model = AutoModelForCausalLM.from_pretrained('internlm/internlm-xcomposer2-vl-1_8b', trust_remote_code=True).cuda().eval()
-        self.pipe_image_to_text = pipeline('image-to-text', model='microsoft/git-large-coco', device='cpu')  # self.device
-        self.pipe_image_segmentation = pipeline('image-segmentation', model='microsoft/beit-large-finetuned-ade-640-640', device='cpu')  # self.device
+        self.pipe_image_to_text = pipeline('image-to-text', model='microsoft/git-large-coco', device='cpu')
+        self.pipe_image_segmentation = pipeline('image-segmentation', model='microsoft/beit-large-finetuned-ade-640-640', device='cpu')
 
     def preprocess(self, image_link: str) -> Image:
         image = Image.open(get(image_link, stream=True).raw)
@@ -90,10 +90,6 @@ class AnsweringPipe():
         return self.translate(output_text)
     
     def generate_text_gpt(self, prompt: str) -> str:
-        # output_text = Client.create_completion('gpt3', prompt)
-
-        # return self.translate(output_text)
-
         client = Client()
         response = client.chat.completions.create(
             model='gpt-3.5-turbo',
@@ -120,8 +116,12 @@ class AnsweringPipe():
         text_parts = []
         for start in range(0, len(text), max_length):
             end = start + max_length
-            out = ts.translate_text(text[start:end], translator=translator, from_language=src_lang, to_language=dest_lang)
-            # alternative option for translator is 'modernMt', it's also good ('caiyun' now)
+            try:
+                reload(ts)  # translators issue fix
+                out = ts.translate_text(text[start:end], translator=translator, from_language=src_lang, to_language=dest_lang)
+                # alternative option for translator is 'modernMt', it's also good ('caiyun' now)
+            except:
+                out = labels['error']
             text_parts.append(out)
         
         return ' '.join(text_parts)
