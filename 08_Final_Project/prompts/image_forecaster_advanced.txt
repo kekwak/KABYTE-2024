@@ -4,4 +4,4 @@ Use only English.
 Context:
 <CONTEXT>
 
-Predict the future 
+Predict the future: 

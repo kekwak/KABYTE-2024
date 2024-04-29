@@ -8,4 +8,4 @@ Use only English.
 Context:
 <CONTEXT>
 
-Provide a detailed description 
+Provide a detailed description of the image: 
