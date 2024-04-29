@@ -5,7 +5,6 @@ from torch import cuda, device
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from huggingface_hub import InferenceClient
 
-from importlib import reload
 from requests import get
 from PIL import Image
 from tqdm import tqdm
@@ -101,7 +100,7 @@ class AnsweringPipe():
     def generate_text_mistral(self, prompt: str) -> str:
         output = self.client.text_generation(
             prompt,
-            max_new_tokens=4096,
+            max_new_tokens=1024,
             return_full_text=False,
         )
 
@@ -117,9 +116,11 @@ class AnsweringPipe():
         for start in range(0, len(text), max_length):
             end = start + max_length
             try:
-                reload(ts)  # translators issue fix
-                out = ts.translate_text(text[start:end], translator=translator, from_language=src_lang, to_language=dest_lang)
                 # alternative option for translator is 'modernMt', it's also good ('caiyun' now)
+                out = ts.server.caiyun(
+                    text[start:end], translator=translator, from_language=src_lang, to_language=dest_lang,
+                    update_session_after_freq=1, update_session_after_seconds=5
+                )
             except:
                 out = labels['error']
             text_parts.append(out)

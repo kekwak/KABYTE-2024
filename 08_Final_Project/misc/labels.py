@@ -7,7 +7,7 @@ labels = {
     'settings_text': 'Выберите действия:',
 
     'generate': 'Генерировать!',
-    'start_generating': 'Ожидайте ~2-6 мин.',
+    'start_generating': 'Ожидайте ~2-7 мин.',
     'generation_result': '✅ Ваша Генерация:',
     
     'unknown_command': 'Неизвестная команда, напишите /reload',
