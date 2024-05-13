@@ -7,6 +7,7 @@ from misc.pipe import answer_image
 
 
 user_selections = {}
+last_image_per_chat = {}
 
 async def start_command(message: types.Message) -> None:      
     reply_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -64,6 +65,7 @@ async def print_settings(message: types.Message) -> None:
     inline_markup = await get_settings_inline(models, tasks, model_default, tasks_default, advanced_default)
 
     last_photo_file_id = message.photo[-1].file_id
+    last_image_per_chat[user_id] = last_photo_file_id
     await message.answer_photo(photo=last_photo_file_id, caption=labels['settings_text'], reply_markup=inline_markup)
 
 async def change_settings(callback: types.CallbackQuery) -> None:
@@ -119,15 +121,45 @@ async def generate_output(callback: types.CallbackQuery) -> None:
     task = labels['tasks'].index(user_selections[user_id]['task'])
     advanced = user_selections[user_id]['advanced']
     
-    # try:
-    loop = get_running_loop()
-    output = await loop.run_in_executor(None, answer_image, url, model, task, advanced)
-    # except Exception as e:
-    #     output = labels['error'] + f' {e}'
+    try:
+        loop = get_running_loop()
+        output = await loop.run_in_executor(None, answer_image, url, model, task, advanced)
+    except Exception as e:
+        output = labels['error'] + f' {e}'
 
     final_output =f"{labels['generation_result']}\n{model} {labels['tasks'][task]} adv={advanced}\n\n" + output
 
     await send_large_message(callback.message, final_output)
+
+async def get_last_image(message: types.Message):
+    user_id = message.from_user.id
+    file_id = last_image_per_chat.get(user_id, None)
+
+    if not file_id:
+        await message.reply(labels['last_photo_error'])
+        return 0
+    
+    await set_up_user_settings(message)
+    
+    file = await message.bot.get_file(file_id)
+    file_path = file.file_path
+
+    base_url = 'https://api.telegram.org/file/bot'
+    url = f"{base_url}{message.bot._token}/{file_path}"
+
+    model = labels['models'][0]
+    task = 2
+    advanced = True
+    
+    try:
+        loop = get_running_loop()
+        output = await loop.run_in_executor(None, answer_image, url, model, task, advanced, message.text)
+    except Exception as e:
+        output = labels['error'] + f' {e}'
+
+    final_output =f"{labels['answer_result']}\n\n" + output
+
+    await send_large_message(message, final_output)
 
 async def message_close(callback: types.CallbackQuery) -> None:
     await callback.message.edit_text(labels['cancel'])
@@ -136,6 +168,7 @@ def register_handlers(dp) -> None:
     dp.register_message_handler(start_command, commands=['start', 'reload'])
     dp.register_message_handler(print_guide, lambda m: m.text == labels['guide'])
     dp.register_message_handler(print_settings, content_types=['photo'])
+    dp.register_message_handler(get_last_image)
 
     dp.register_callback_query_handler(message_close, lambda m: m.data == 'message_close')
     dp.register_callback_query_handler(

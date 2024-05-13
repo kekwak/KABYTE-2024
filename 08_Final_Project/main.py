@@ -8,7 +8,7 @@ import logging
 import os, dotenv
 
 dotenv.load_dotenv()
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 
 bot = Bot(token=os.getenv('BOT_TOKEN'))
 dp = Dispatcher(bot)

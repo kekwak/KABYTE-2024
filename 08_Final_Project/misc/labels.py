@@ -9,6 +9,7 @@ labels = {
     'generate': 'Генерировать!',
     'start_generating': 'Ожидайте ~2-7 мин.',
     'generation_result': '✅ Ваша Генерация:',
+    'answer_result': '✅ Ваш Ответ:',
     
     'unknown_command': 'Неизвестная команда, напишите /reload',
     'cancel': 'Отменено',
@@ -18,7 +19,9 @@ labels = {
     'models': ['GPT-3.5', 'Mistral-7B'],
     'tasks': ['Гадание', 'Описание'],
     'checkboxes': ['Advanced'],
-    'tasks_prompts': ['image_forecaster.txt', 'image_description.txt'],
+    'tasks_prompts': ['image_forecaster.txt', 'image_description.txt', 'question_answering.txt'],
+
+    'last_photo_error': 'Невозможно получить фотографию',
 
     'error': 'Произошла ошибка :(',
 

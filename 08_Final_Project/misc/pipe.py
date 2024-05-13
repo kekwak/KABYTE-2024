@@ -66,6 +66,20 @@ class AnsweringPipe():
 
         return output
     
+    def answer_question_advanced(self, image: Image, question: str) -> str:
+        file_id = str(random.randint(1e+20, 1e+21))
+        file_path = f'images_tmp/{file_id}.png'
+        image.save(file_path)
+
+        model_question = '<ImageHere>' + question
+        for _ in tqdm(range(1)):
+            with cuda.amp.autocast():
+                output, _ = self.visual_model.chat(self.img_tokenizer, query=model_question, image=file_path, do_sample=False, history=[])
+
+        os.remove(file_path)
+
+        return output
+    
     def generate_scene(self, image: Image, image_segmentation: list) -> str:
         image_array = np.array(image)
         image_text = np.empty(image_array.shape[:2], dtype='<U100')
@@ -112,7 +126,7 @@ class AnsweringPipe():
             prompt_raw = ''.join(f.readlines())
         return prompt_raw.replace('<SCENE>', scene).replace('<CONTEXT>', context)
     
-    def translate(self, text: str, src_lang: str='en', dest_lang: str='ru', translator: str='caiyun', max_length: int = 4096) -> str:
+    def translate(self, text: str, src_lang: str='en', dest_lang: str='ru', translator: str='caiyun', max_length: int=4096) -> str:
         text_parts = []
         for start in range(0, len(text), max_length):
             end = start + max_length
@@ -129,10 +143,14 @@ class AnsweringPipe():
         
         return ' '.join(text_parts)
     
-    def predict(self, image_link: str, model_name: str=models[0], task: int=0, advanced: bool=True) -> str:
+    def predict(self, image_link: str, model_name: str=models[0], task: int=0, advanced: bool=True, question: str='') -> str:
         prompt_file = self.tasks[task]
         image = self.preprocess(image_link)
-        if not advanced:
+        if task == 2:
+            in_text = self.translate(question, src_lang='auto', dest_lang='en')
+            out_text = self.answer_question_advanced(image, in_text)
+            output = self.translate(out_text, src_lang='en', dest_lang='ru', translator='bing')
+        elif not advanced:
             image_segmentation, image_description = self.generate_seg_descr(image)
 
             context = image_description[0].get('generated_text')
@@ -144,8 +162,9 @@ class AnsweringPipe():
             context = self.generate_descr_advanced(image)
             scene=''
         
-        prompt = self.load_prompt(prompt_file, scene, context)
-        output = self.generate_selector(prompt, model_name=model_name)
+        if task != 2:
+            prompt = self.load_prompt(prompt_file, scene, context)
+            output = self.generate_selector(prompt, model_name=model_name)
 
         return output
 
