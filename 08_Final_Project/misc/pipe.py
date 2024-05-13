@@ -5,7 +5,7 @@ from torch import cuda, device
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from huggingface_hub import InferenceClient
 
-from importlib import reload
+# from importlib import reload
 from requests import get
 from PIL import Image
 from tqdm import tqdm
@@ -126,16 +126,16 @@ class AnsweringPipe():
             prompt_raw = ''.join(f.readlines())
         return prompt_raw.replace('<SCENE>', scene).replace('<CONTEXT>', context)
     
-    def translate(self, text: str, src_lang: str='en', dest_lang: str='ru', translator: str='caiyun', max_length: int=4096) -> str:
+    def translate(self, text: str, src_lang: str='en', dest_lang: str='ru', translator: str='modernMt', max_length: int=4096) -> str:
         text_parts = []
         for start in range(0, len(text), max_length):
             end = start + max_length
             try:
-                reload(ts)  # translators issue fix
+                # reload(ts)  # translators issue fix
                 # alternative option for translator is 'modernMt', it's also good ('caiyun' now)
                 out = ts.translate_text(
                     text[start:end], translator=translator, from_language=src_lang, to_language=dest_lang,
-                    update_session_after_freq=1, update_session_after_seconds=5,
+                    # update_session_after_freq=1, update_session_after_seconds=5,
                 )
             except:
                 out = labels['error']
