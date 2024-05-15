@@ -17,8 +17,8 @@
 * Image-to-Text: microsoft/git-large-coco
 * image-segmentation: microsoft/beit-large-finetuned-ade-640-640
 
+Бот доступен по ссылке: https://t.me/testset6543bot<br>
 Примеры генераций можно посмотреть тут: https://t.me/imgwriter
-Бот доступен по ссылке: https://t.me/testset6543bot
 
 ### Вход:
 ![image](https://github.com/kekwak/KABYTE-2024/assets/51455473/3dcca3d3-5c82-4806-9793-5f8a341fee88)
