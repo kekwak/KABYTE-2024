@@ -1,0 +1,235 @@
+{
+    "description": "",
+    "tags": [],
+    "size": {
+        "height": 723,
+        "width": 500
+    },
+    "objects": [
+        {
+            "id": 149079820,
+            "classId": 6528788,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:34:08.051Z",
+            "updatedAt": "2024-02-19T13:34:08.051Z",
+            "tags": [],
+            "classTitle": "person",
+            "points": {
+                "exterior": [
+                    [
+                        97,
+                        6
+                    ],
+                    [
+                        356,
+                        722
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149079819,
+            "classId": 6528789,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:34:08.050Z",
+            "updatedAt": "2024-02-19T13:34:08.050Z",
+            "tags": [],
+            "classTitle": "face",
+            "points": {
+                "exterior": [
+                    [
+                        204,
+                        51
+                    ],
+                    [
+                        261,
+                        137
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149079818,
+            "classId": 6528789,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:34:08.050Z",
+            "updatedAt": "2024-02-19T13:34:08.050Z",
+            "tags": [],
+            "classTitle": "face",
+            "points": {
+                "exterior": [
+                    [
+                        317,
+                        172
+                    ],
+                    [
+                        339,
+                        215
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149079817,
+            "classId": 6528789,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:34:08.050Z",
+            "updatedAt": "2024-02-19T13:34:08.050Z",
+            "tags": [],
+            "classTitle": "face",
+            "points": {
+                "exterior": [
+                    [
+                        1,
+                        154
+                    ],
+                    [
+                        12,
+                        202
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149079816,
+            "classId": 6528790,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:34:08.049Z",
+            "updatedAt": "2024-02-19T13:34:08.049Z",
+            "tags": [],
+            "classTitle": "hand",
+            "points": {
+                "exterior": [
+                    [
+                        104,
+                        139
+                    ],
+                    [
+                        147,
+                        203
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149079815,
+            "classId": 6528790,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:34:08.049Z",
+            "updatedAt": "2024-02-19T13:34:08.049Z",
+            "tags": [],
+            "classTitle": "hand",
+            "points": {
+                "exterior": [
+                    [
+                        107,
+                        339
+                    ],
+                    [
+                        129,
+                        365
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149079814,
+            "classId": 6528790,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:34:08.049Z",
+            "updatedAt": "2024-02-19T13:34:08.049Z",
+            "tags": [],
+            "classTitle": "hand",
+            "points": {
+                "exterior": [
+                    [
+                        320,
+                        398
+                    ],
+                    [
+                        353,
+                        452
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149079813,
+            "classId": 6528788,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:34:08.048Z",
+            "updatedAt": "2024-02-19T13:34:08.048Z",
+            "tags": [],
+            "classTitle": "person",
+            "points": {
+                "exterior": [
+                    [
+                        1,
+                        140
+                    ],
+                    [
+                        54,
+                        545
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149079812,
+            "classId": 6528788,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:34:08.048Z",
+            "updatedAt": "2024-02-19T13:34:08.048Z",
+            "tags": [],
+            "classTitle": "person",
+            "points": {
+                "exterior": [
+                    [
+                        101,
+                        142
+                    ],
+                    [
+                        200,
+                        557
+                    ]
+                ],
+                "interior": []
+            }
+        }
+    ]
+}

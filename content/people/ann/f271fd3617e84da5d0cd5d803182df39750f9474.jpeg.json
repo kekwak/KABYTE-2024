@@ -1,0 +1,210 @@
+{
+    "description": "",
+    "tags": [],
+    "size": {
+        "height": 1000,
+        "width": 741
+    },
+    "objects": [
+        {
+            "id": 149086403,
+            "classId": 6528788,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:35:44.930Z",
+            "updatedAt": "2024-02-19T13:35:44.930Z",
+            "tags": [],
+            "classTitle": "person",
+            "points": {
+                "exterior": [
+                    [
+                        520,
+                        18
+                    ],
+                    [
+                        724,
+                        999
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149086402,
+            "classId": 6528788,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:35:44.930Z",
+            "updatedAt": "2024-02-19T13:35:44.930Z",
+            "tags": [],
+            "classTitle": "person",
+            "points": {
+                "exterior": [
+                    [
+                        404,
+                        67
+                    ],
+                    [
+                        621,
+                        969
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149086401,
+            "classId": 6528788,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:35:44.929Z",
+            "updatedAt": "2024-02-19T13:35:44.929Z",
+            "tags": [],
+            "classTitle": "person",
+            "points": {
+                "exterior": [
+                    [
+                        147,
+                        82
+                    ],
+                    [
+                        553,
+                        953
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149086400,
+            "classId": 6528788,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:35:44.928Z",
+            "updatedAt": "2024-02-19T13:35:44.928Z",
+            "tags": [],
+            "classTitle": "person",
+            "points": {
+                "exterior": [
+                    [
+                        50,
+                        72
+                    ],
+                    [
+                        323,
+                        961
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149086399,
+            "classId": 6528789,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:35:44.928Z",
+            "updatedAt": "2024-02-19T13:35:44.928Z",
+            "tags": [],
+            "classTitle": "face",
+            "points": {
+                "exterior": [
+                    [
+                        322,
+                        107
+                    ],
+                    [
+                        375,
+                        206
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149086398,
+            "classId": 6528789,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:35:44.926Z",
+            "updatedAt": "2024-02-19T13:35:44.926Z",
+            "tags": [],
+            "classTitle": "face",
+            "points": {
+                "exterior": [
+                    [
+                        673,
+                        41
+                    ],
+                    [
+                        735,
+                        156
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149086397,
+            "classId": 6528790,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:35:44.925Z",
+            "updatedAt": "2024-02-19T13:35:44.925Z",
+            "tags": [],
+            "classTitle": "hand",
+            "points": {
+                "exterior": [
+                    [
+                        456,
+                        500
+                    ],
+                    [
+                        496,
+                        577
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149086396,
+            "classId": 6528790,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:35:44.925Z",
+            "updatedAt": "2024-02-19T13:35:44.925Z",
+            "tags": [],
+            "classTitle": "hand",
+            "points": {
+                "exterior": [
+                    [
+                        540,
+                        540
+                    ],
+                    [
+                        591,
+                        590
+                    ]
+                ],
+                "interior": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,85 @@
+{
+    "description": "",
+    "tags": [],
+    "size": {
+        "height": 1000,
+        "width": 749
+    },
+    "objects": [
+        {
+            "id": 149077674,
+            "classId": 6528788,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:33:40.577Z",
+            "updatedAt": "2024-02-19T13:33:40.577Z",
+            "tags": [],
+            "classTitle": "person",
+            "points": {
+                "exterior": [
+                    [
+                        192,
+                        1
+                    ],
+                    [
+                        469,
+                        999
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149077673,
+            "classId": 6528789,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:33:40.576Z",
+            "updatedAt": "2024-02-19T13:33:40.576Z",
+            "tags": [],
+            "classTitle": "face",
+            "points": {
+                "exterior": [
+                    [
+                        294,
+                        35
+                    ],
+                    [
+                        369,
+                        132
+                    ]
+                ],
+                "interior": []
+            }
+        },
+        {
+            "id": 149077672,
+            "classId": 6528790,
+            "objectId": null,
+            "description": "",
+            "geometryType": "rectangle",
+            "labelerLogin": "inbox@datasetninja.com",
+            "createdAt": "2024-02-19T13:33:40.576Z",
+            "updatedAt": "2024-02-19T13:33:40.576Z",
+            "tags": [],
+            "classTitle": "hand",
+            "points": {
+                "exterior": [
+                    [
+                        354,
+                        484
+                    ],
+                    [
+                        410,
+                        561
+                    ]
+                ],
+                "interior": []
+            }
+        }
+    ]
+}
